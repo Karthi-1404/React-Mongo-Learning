@@ -1,6 +1,17 @@
 import {axiosInstance} from './axiosInstance'
 import axios from "axios"
-console.log('axiosInstance',axiosInstance);
+const userAllQuery = `query {
+    users{
+      _id
+      name
+      email
+      role
+      status
+      createdAt
+      updatedAt
+    }
+}
+`
 export const registerCall = async (payload)=>{
     try {
         const success = await axiosInstance.post('/auth/register',payload)
@@ -32,8 +43,15 @@ export const currentUser = async ()=>{
 }
 export const getallUser = async ()=>{
     try {
-        const success = await axiosInstance.get('/user/get-users')
-        return success.data
+        const success = await axiosInstance.post('/graphql',{
+           query:userAllQuery    
+        },{
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log('success.data',success)
+        return success
     } catch (error) {
         return error.message
     }

@@ -36,9 +36,10 @@ function Users() {
       try {
         dispatch(setLoader(true))
         const response = await getallUser()
+        console.log('response===',response);
         dispatch(setLoader(false))
-        if(response.success){
-            setusers(response.data)
+        if(response){
+            setusers(response.data.data.users)
         }
       } catch (error) {
         dispatch(setLoader(false))

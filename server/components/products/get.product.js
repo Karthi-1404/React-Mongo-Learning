@@ -9,8 +9,14 @@ const getProduct = async(req,res)=>{
         if(req.body.seller){
             filter.seller = req.body.seller  
         }
-        console.log('sdcscsdc',filter);
-         const products = await Products.find(filter).populate('seller')
+        if(req.body.status){
+            filter.status = req.body.status 
+        }
+       
+        if(req.body.category.length > 0){
+            filter.category =  {$in:[...req.body.category]} 
+        }
+         const products = await Products.find({...filter}).populate('seller')
         
        res.send({
         success:true,

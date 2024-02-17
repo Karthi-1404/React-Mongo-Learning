@@ -4,13 +4,16 @@ import { setLoader } from '../../redux/loaderSlice';
 import { getProductApi } from '../../api/product';
 import { message } from 'antd';
 import Divider from "../../components/divider";
+import Filter from "./filter";
 import { useNavigate } from 'react-router-dom';
 function Home() {
   let navigate = useNavigate()
   const dispatch = useDispatch()
   const [products,setProducts] = React.useState([])
+  const [showfilters,setShowfilters] = React.useState(true)
   const [filter,setFilter] = React.useState({
-    status:'approved'
+    status:'approved',
+    category:[]
   })
   const getData = async()=>{
     try {
@@ -34,10 +37,20 @@ function Home() {
   useEffect(()=>{
      getData()
   },[])
+  useEffect(()=>{
+    getData()
+ },[filter])
 
   const {user}  = useSelector(state=>state.users)
     return (
-      <div className='grid grid-cols-5 gap-2'>
+
+
+        <div className='flex gap-5'>
+        {showfilters && <Filter setShowfilters={setShowfilters} showfilters={showfilters} filter={filter} setFilter={setFilter}/>}
+
+        {!showfilters && <i class="ri-equalizer-line text-xl pd-2" onClick={()=>{setShowfilters(!showfilters)}}></i>}
+
+        <div className={`grid gap-5 ${showfilters?"grid-cols-4":"grid-cols-5"} `}>
         {products.map((product)=>{
           return (
             <div className='border border-gray-300 rounded border-solid flex flex-col gap-5 pb-2 cursor-pointer'
@@ -56,6 +69,7 @@ function Home() {
         }
          
           )}
+      </div>
       </div>
     );
   }
